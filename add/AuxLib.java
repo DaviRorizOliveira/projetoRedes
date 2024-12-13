@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 import org.json.JSONObject;
+import socketCliente.Cliente;
 
 public abstract class AuxLib {
     static public Scanner input  = new Scanner(System.in);
@@ -17,6 +18,8 @@ public abstract class AuxLib {
 
     static private Random gerador = new Random();
 
+    static private Cliente cliente = new Cliente("", 12345);
+
     /** Retorna um número entre 0 e o valor absoluto de max como String */
     static public String novoInteiroStr(long max){
         return String.valueOf(novoInteiro(max));
@@ -28,13 +31,13 @@ public abstract class AuxLib {
     }
 
     /** Retorna um número entre 0 e o valor absoluto de max como String */
-    static public JSONObject novoInteiroStrJSON(long max){
+    static public void novoInteiroStrJSON(long max){
         long result = novoInteiro(max);
         JSONObject json = new JSONObject();
         json.put("status", "sucesso");
         json.put("operacao", "novoInteiroStr");
         json.put("resultado", result);
-        return json;
+        cliente.conversarComServidor(json);
     }
 
     /** Retorna um número entre min e o valor absoluto de max como long */
@@ -71,6 +74,7 @@ public abstract class AuxLib {
         JSONObject json = new JSONObject();
         json.put("operacao", "novoInteiroNl");
         json.put("parametro", result);
+        cliente.conversarComServidor(json);
     }
     
     /** Verifica se a string informada é composta apenas por número e retorna um booleano */
