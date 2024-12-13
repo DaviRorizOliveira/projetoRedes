@@ -81,7 +81,11 @@ Recebe o retorno caso as entradas e parâmetros estejam corretas.
 
 # FUNCIONAMENTO DO SOFTWARE
 
+As chamadas para o servidor são mediadas por um cliente disponibilizado pela implementação, e estão sendo utilizadas na classe AuxLib, do Package Add do programa. 
+
 # PROPÓSITO DO SOFTWARE
+
+O software em questão é um jogo de simulação de vida que roda no terminal. Simples, intuitivo e divertido. Faça escolhas e escreva a sua história.
 
 # MOTIVAÇÃO DA ESCOLHA DO PROTOCOLO
 O protocolo escolhido para a realização do projeto foi o protocolo TCP (Transmission Control Protocol), é amplamente utilizado em aplicações de rede devido às suas características de confiabilidade e controle de dados. Como o intuito do projeto tem como objetivo priorizar a confiabilidade, foi preferenciado o protocolo TCP.
