@@ -102,12 +102,15 @@ class ServidorThread extends Thread {
                 // Envia a resposta ao cliente
                 saida.writeUTF(resposta.toString());
             }
+        } catch (java.io.EOFException eof) {
+            System.out.println("Cliente encerrou a conexão.");
         } catch (Exception e) {
             System.out.println("Erro na thread do servidor: " + e.getMessage());
             e.printStackTrace();
-            encerrarConexao();
+        } finally {
+            encerrarConexao(); // Sempre encerra a conexão no final
         }
-    }
+    } 
 
     public String pegaComando(JSONObject request){
         return request.getString("operacao");
@@ -166,15 +169,24 @@ class ServidorThread extends Thread {
 
     private void encerrarConexao() {
         try {
+            if (entrada != null) {
+                entrada.close();
+            }
+            if (saida != null) {
+                saida.close();
+            }
+            if (cliente != null && !cliente.isClosed()) {
+                cliente.close();
+            }
+            if (timer != null && !timer.isShutdown()) {
+                timer.shutdownNow();
+            }
             System.out.println("Conexão encerrada com o cliente: " + cliente.getInetAddress());
-            entrada.close();
-            saida.close();
-            cliente.close();
-            timer.shutdownNow();
         } catch (Exception e) {
             System.out.println("Erro ao encerrar a conexão: " + e.getMessage());
+            e.printStackTrace();
         }
-    }
+    }    
 
     public JSONObject novoInteiroMax(JSONObject requisicao){
         long max = requisicao.getLong("parametro1");
