@@ -10,6 +10,8 @@ import java.util.concurrent.TimeUnit;
 import org.json.JSONObject;
 import org.json.JSONArray;
 
+import java.util.Random;
+
 class ServidorThread extends Thread {
     static private Random gerador = new Random();
 
@@ -132,7 +134,7 @@ class ServidorThread extends Thread {
             case "novoInteiroMax":
                 return this.criarResposta(comando, 12);
             case "novoInteiroMinMax":
-                return this.criarResposta(comando, 12);
+                return this.novoInteiroMinMax(requisicao);
             case "novoInteiroMinMaxProb":
                 return this.criarResposta(comando, 12);
             case "novoInteiroNL":
@@ -170,7 +172,15 @@ class ServidorThread extends Thread {
         }
     }
 
-    static public long novoInteiro(long min, long max){
-        return (long)(gerador.nextDouble() * max-min)+min;
+    public JSONObject novoInteiroMinMax(JSONObject requisicao) {
+        long min = requisicao.getLong("parametro1");
+        long max = requisicao.getLong("parametro2");
+        long resultado = (long)(gerador.nextDouble() * max - min) + min;
+
+        JSONObject resposta = new JSONObject();
+        resposta.put("status", "sucesso");
+        resposta.put("operacao", this.pegaComando(requisicao));
+        resposta.put("resultado", resultado);
+        return resposta;
     }
 }

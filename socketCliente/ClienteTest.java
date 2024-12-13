@@ -7,7 +7,7 @@ public class ClienteTest {
         try {
             // Configurações do servidor
             String host = "localhost"; // Substitua pelo host do servidor
-            int porta = 1234;         // Substitua pela porta correta
+            int porta = 8000;         // Substitua pela porta correta
 
             // Cria o cliente e conecta ao servidor
             Cliente cliente = new Cliente(host, porta);
