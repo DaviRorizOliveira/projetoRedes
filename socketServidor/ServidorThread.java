@@ -130,7 +130,7 @@ class ServidorThread extends Thread {
 
         switch (comando) {
             case "novoInteiroStr":
-                return this.criarResposta(comando, 12);
+                return this.novoInteiroStrJSON(10);
             case "novoInteiroMax":
                 return this.criarResposta(comando, 12);
             case "novoInteiroMinMax":
@@ -139,7 +139,7 @@ class ServidorThread extends Thread {
             case "novoInteiroMinMaxProb":
                 return this.criarResposta(comando, 12);
             case "novoInteiroNL":
-                return this.criarResposta(comando, 12);
+                return this.novoInteiroNlJSON(10);
             case "exit":
                 return this.criarResposta(comando, 12);
             default:
@@ -179,4 +179,52 @@ class ServidorThread extends Thread {
         long resultado = (long)(gerador.nextDouble() * (max - min)) + min;
         return resultado;
     }
+
+        /** -------------------- JOABE FUNÇÕES----------------------------------------------------- */
+
+    /** Retorna um número entre 0 e o valor absoluto de max como String */
+    static public String novoInteiroStr(long max){
+        return String.valueOf(novoInteiro(max));
+    }
+
+    /** Retorna um número entre min e o valor absoluto de max como long */
+    static public long novoInteiro(long min, long max){
+        return (long)(gerador.nextDouble() * max-min)+min;
+    }
+
+    /** Retorna um número entre 0 e o valor absoluto de max como long */
+    static public long novoInteiro(long max){
+        return novoInteiro(0, max);
+    }
+
+    /** Retorna um número entre 0 e o valor absoluto de max como String */
+    public JSONObject novoInteiroStrJSON(long max){
+        long result = novoInteiro(max);
+        if (result < 0)
+            return this.geraErro("Valor Inválido", String.valueOf(max));
+        JSONObject json = new JSONObject();
+        json.put("status", "sucesso");
+        json.put("operacao", "novoInteiroStr");
+        json.put("resultado", result);
+        return json;
+    }
+    
+    /** Retorna um número não nulo, entre 1 e o valor absoluto de max como long */
+    static public long novoInteiro_nl(long max){
+        return novoInteiro(1, max);
+    }
+
+    /** Retorna um número entre 0 e o valor absoluto de max como String */
+    public JSONObject novoInteiroNlJSON(long max){
+        long result = novoInteiro_nl(max);
+        if (result < 0)
+            return this.geraErro("Valor Inválido", String.valueOf(max));
+        JSONObject json = new JSONObject();
+        json.put("status", "sucesso");
+        json.put("operacao", "novoInteiroNl");
+        json.put("resultado", result);
+        return json;
+    }
+
+    /** -------------------- JOABE FUNÇÕES----------------------------------------------------- */
 }
