@@ -134,7 +134,8 @@ class ServidorThread extends Thread {
             case "novoInteiroMax":
                 return this.criarResposta(comando, 12);
             case "novoInteiroMinMax":
-                return this.novoInteiroMinMax(requisicao);
+                long resultado = novoInteiroMinMax(requisicao);
+                return this.criarResposta("novoInteiroMinMax", resultado);
             case "novoInteiroMinMaxProb":
                 return this.criarResposta(comando, 12);
             case "novoInteiroNL":
@@ -172,15 +173,10 @@ class ServidorThread extends Thread {
         }
     }
 
-    public JSONObject novoInteiroMinMax(JSONObject requisicao) {
+    public long novoInteiroMinMax(JSONObject requisicao) {
         long min = requisicao.getLong("parametro1");
         long max = requisicao.getLong("parametro2");
-        long resultado = (long)(gerador.nextDouble() * max - min) + min;
-
-        JSONObject resposta = new JSONObject();
-        resposta.put("status", "sucesso");
-        resposta.put("operacao", this.pegaComando(requisicao));
-        resposta.put("resultado", resultado);
-        return resposta;
+        long resultado = (long)(gerador.nextDouble() * (max - min)) + min;
+        return resultado;
     }
 }

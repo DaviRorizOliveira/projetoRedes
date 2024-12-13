@@ -14,8 +14,9 @@ public class ClienteTest {
 
             // Teste de comando válido
             JSONObject comandoValido = new JSONObject();
-            comandoValido.put("operacao", "novoInteiroStr");
+            comandoValido.put("operacao", "novoInteiroMinMax");
             comandoValido.put("parametro1", 10);
+            comandoValido.put("parametro2", 20);
 
             JSONObject resposta = cliente.conversarComServidor(comandoValido);
             System.out.println("Resposta para comando válido: " + resposta.toString(4));
