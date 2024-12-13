@@ -7,15 +7,16 @@ public class ClienteTest {
         try {
             // Configurações do servidor
             String host = "localhost"; // Substitua pelo host do servidor
-            int porta = 1234;         // Substitua pela porta correta
+            int porta = 8000;         // Substitua pela porta correta
 
             // Cria o cliente e conecta ao servidor
             Cliente cliente = new Cliente(host, porta);
 
             // Teste de comando válido
             JSONObject comandoValido = new JSONObject();
-            comandoValido.put("operacao", "novoInteiroStr");
+            comandoValido.put("operacao", "novoInteiroMinMax");
             comandoValido.put("parametro1", 10);
+            comandoValido.put("parametro2", 20);
 
             JSONObject resposta = cliente.conversarComServidor(comandoValido);
             System.out.println("Resposta para comando válido: " + resposta.toString(4));

@@ -131,15 +131,15 @@ class ServidorThread extends Thread {
 
         switch (comando) {
             case "novoInteiroStr":
-                return this.criarResposta(comando, 12);
+                return this.novoInteiroStrJSON(requisicao);
             case "novoInteiroMax":
                 return this.novoInteiroMax(requisicao);
             case "novoInteiroMinMax":
-                return this.criarResposta(comando, 12);
+                return this.novoInteiroMinMax(requisicao);
             case "novoInteiroMinMaxProb":
                 return this.criarResposta(comando, 12);
             case "novoInteiroNL":
-                return this.criarResposta(comando, 12);
+                return this.novoInteiroNlJSON(requisicao);
             case "exit":
                 return this.criarResposta(comando, 12);
             default:
@@ -186,7 +186,67 @@ class ServidorThread extends Thread {
         return resposta;
     }
 
-    static public long novoInteiro(long min, long max){
-        return (long)(gerador.nextDouble() * max-min)+min;
+    /** -------------------- Davi Funções -------------------- */
+
+    public JSONObject novoInteiroMinMax(JSONObject requisicao) {
+        long min = requisicao.getLong("parametro1");
+        long max = requisicao.getLong("parametro2");
+        long resultado = (long)(gerador.nextDouble() * (max - min)) + min;
+
+        JSONObject resposta = new JSONObject();
+        resposta.put("status", "sucesso");
+        resposta.put("operacao", "novoInteiroMinMax");
+        resposta.put("resultado", resultado);
+        return resposta;
+    }
+
+    /** -------------------- Joabe Funções -------------------- */
+
+    /** Retorna um número entre 0 e o valor absoluto de max como String */
+    static public String novoInteiroStr(long max) {
+        return String.valueOf(novoInteiro(max));
+    }
+
+    /** Retorna um número entre min e o valor absoluto de max como long */
+    static public long novoInteiro(long min, long max) {
+        return (long)(gerador.nextDouble() * (max - min)) + min;
+    }
+
+    /** Retorna um número entre 0 e o valor absoluto de max como long */
+    static public long novoInteiro(long max) {
+        return novoInteiro(0, max);
+    }
+
+    /** Retorna um número entre 0 e o valor absoluto de max como String */
+    public JSONObject novoInteiroStrJSON(JSONObject requisicao) {
+        long max = requisicao.getLong("parametro1");
+        
+        long result = novoInteiro(max);
+        if (result < 0)
+            return this.geraErro("Valor Inválido", String.valueOf(max));
+        JSONObject json = new JSONObject();
+        json.put("status", "sucesso");
+        json.put("operacao", "novoInteiroStr");
+        json.put("resultado", result);
+        return json;
+    }
+    
+    /** Retorna um número não nulo, entre 1 e o valor absoluto de max como long */
+    static public long novoInteiro_nl(long max) {
+        return novoInteiro(1, max);
+    }
+
+    /** Retorna um número entre 0 e o valor absoluto de max como String */
+    public JSONObject novoInteiroNlJSON(JSONObject requisicao) {
+        long max = requisicao.getLong("parametro1");
+
+        long result = novoInteiro_nl(max);
+        if (result < 0)
+            return this.geraErro("Valor Inválido", String.valueOf(max));
+        JSONObject json = new JSONObject();
+        json.put("status", "sucesso");
+        json.put("operacao", "novoInteiroNl");
+        json.put("resultado", result);
+        return json;
     }
 }
