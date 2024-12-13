@@ -1,7 +1,6 @@
 package add;
 
 import java.util.List;
-import java.util.Random;
 import java.util.Scanner;
 
 import org.json.JSONObject;
@@ -18,10 +17,7 @@ public abstract class AuxLib {
     private static final String CLEAR = "\u001B[0m";
     private static final String UNDERLINE = "\u001B[4m";
 
-    static private Random gerador = new Random();
     //Coloquei isso aqui mas não sei onde que será feita essa conexão
-    static private Cliente cliente = new Cliente("localhost", 12345);
-
     static private Cliente cliente = new Cliente("localhost", 12345);
 
     /** Retorna um número entre 0 e o valor absoluto de max como String */
