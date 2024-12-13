@@ -27,20 +27,14 @@ public abstract class AuxLib {
         return novoInteiro(0, max);
     }
 
-    /** Simula o envio de dados para o servidor (exemplo) */
-    static public void PushToServer(JSONObject json){
-        // Aqui você pode implementar a lógica para enviar o JSON
-        System.out.println("Enviando para o servidor: " + json.toString());
-    }
-
     /** Retorna um número entre 0 e o valor absoluto de max como String */
-    static public void novoInteiroStrJSON(long max){
+    static public JSONObject novoInteiroStrJSON(long max){
         long result = novoInteiro(max);
         JSONObject json = new JSONObject();
+        json.put("status", "sucesso");
         json.put("operacao", "novoInteiroStr");
-        json.put("parametro", result);
-        
-        PushToServer(json);
+        json.put("resultado", result);
+        return json;
     }
 
     /** Retorna um número entre min e o valor absoluto de max como long */
@@ -77,8 +71,6 @@ public abstract class AuxLib {
         JSONObject json = new JSONObject();
         json.put("operacao", "novoInteiroNl");
         json.put("parametro", result);
-
-        PushToServer(json);
     }
     
     /** Verifica se a string informada é composta apenas por número e retorna um booleano */
