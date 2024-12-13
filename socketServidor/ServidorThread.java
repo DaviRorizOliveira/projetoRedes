@@ -84,7 +84,7 @@ class ServidorThread extends Thread {
     }
 
     public void resetaTimer(){
-        resetTimer(() -> encerrarConexao(entrada, saida));
+        resetTimer(() -> encerrarConexao());
     }
 
     private void escutarCliente() {
@@ -94,13 +94,7 @@ class ServidorThread extends Thread {
                 String requisicao = entrada.readUTF();
     
                 // Reseta o timer a cada interação
-                resetTimer(() -> encerrarConexao(entrada, saida));
-    
-                if ("exit".equalsIgnoreCase(requisicao)) {
-                    System.out.println("Cliente solicitou desconexão.");
-                    encerrarConexao(entrada, saida);
-                    break;
-                }
+                resetTimer(() -> encerrarConexao());
     
                 // Processa a requisição recebida
                 JSONObject resposta = processarRequisicao(new JSONObject(requisicao));
@@ -110,7 +104,8 @@ class ServidorThread extends Thread {
             }
         } catch (Exception e) {
             System.out.println("Erro na thread do servidor: " + e.getMessage());
-            encerrarConexao(entrada, saida);
+            e.printStackTrace();
+            encerrarConexao();
         }
     }
 
@@ -128,6 +123,7 @@ class ServidorThread extends Thread {
 
     private JSONObject processarRequisicao(JSONObject requisicao) {
         String comando = this.pegaComando(requisicao);
+        System.err.println("Comando: "+ comando);
 
         switch (comando) {
             case "novoInteiroStr":
@@ -137,11 +133,12 @@ class ServidorThread extends Thread {
             case "novoInteiroMinMax":
                 return this.novoInteiroMinMax(requisicao);
             case "novoInteiroMinMaxProb":
-                return this.criarResposta(comando, 12);
+                return this.novoInteiroMinMaxProb(requisicao);
             case "novoInteiroNL":
                 return this.novoInteiroNlJSON(requisicao);
             case "exit":
-                return this.criarResposta(comando, 12);
+                this.agendaFechaCon();
+                return this.criarResposta(comando, null);
             default:
                 return this.geraErro("Comando inválido", comando);
         }
@@ -161,7 +158,13 @@ class ServidorThread extends Thread {
         timer.schedule(onTimeout, 60, TimeUnit.SECONDS);
     }
 
-    private void encerrarConexao(DataInputStream entrada, DataOutputStream saida) {
+    private void agendaFechaCon() {
+        timer.shutdownNow();
+        timer = Executors.newSingleThreadScheduledExecutor();
+        timer.schedule(()->this.encerrarConexao(), 3, TimeUnit.SECONDS);
+    }
+
+    private void encerrarConexao() {
         try {
             System.out.println("Conexão encerrada com o cliente: " + cliente.getInetAddress());
             entrada.close();
@@ -227,13 +230,37 @@ class ServidorThread extends Thread {
         JSONObject json = new JSONObject();
         json.put("status", "sucesso");
         json.put("operacao", "novoInteiroStr");
-        json.put("resultado", result);
+        json.put("resultado", String.valueOf(result));
         return json;
     }
     
     /** Retorna um número não nulo, entre 1 e o valor absoluto de max como long */
     static public long novoInteiro_nl(long max) {
         return novoInteiro(1, max);
+    }
+
+    public JSONObject novoInteiroMinMaxProb(JSONObject requisicao){
+        String comando = this.pegaComando(requisicao);
+        try{
+            long max1 = requisicao.getLong("parametro1");
+            long chances1 = requisicao.getLong("parametro2");
+            long max2 = requisicao.getLong("parametro3");
+            long chances2 = requisicao.getLong("parametro4");
+
+            long resultado = ServidorThread.novoInteiro(max1, chances1, max2, chances2);
+            return this.criarResposta(comando, resultado);
+        } catch (Exception e) {
+            return this.geraErro(e.getMessage(), comando);
+        }
+    }
+
+    static public long novoInteiro(long max1, long chances1, long max2, long chances2){
+        long ret, valorMenor = ServidorThread.novoInteiro(max1), valorMaior = ServidorThread.novoInteiro(max1+1, max2);
+
+        if (ServidorThread.novoInteiro_nl(chances1+chances2)<=chances1) ret = valorMenor;
+        else ret = valorMaior;
+
+        return ret;
     }
 
     /** Retorna um número entre 0 e o valor absoluto de max como String */

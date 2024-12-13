@@ -70,18 +70,22 @@ public abstract class AuxLib {
         chances de pertencer ao intervalo1, e vice-versa
     */
     static public long novoInteiro(long max1, long chances1, long max2, long chances2){
-        long ret, valorMenor = AuxLib.novoInteiro(max1), valorMaior = AuxLib.novoInteiro(max1+1, max2);
+        JSONObject json = new JSONObject();
+        json.put("operacao", "novoInteiroMinMaxProb");
+        json.put("parametro1", max1);
+        json.put("parametro2", chances1);
+        json.put("parametro3", max2);
+        json.put("parametro4", chances2);
 
-        if (AuxLib.novoInteiro_nl(chances1+chances2)<=chances1) ret = valorMenor;
-        else ret = valorMaior;
+        JSONObject resultado = cliente.conversarComServidor(json);
 
-        return ret;
+        return resultado.getLong("resultado");
     }
 
     /** Retorna um número não nulo, entre 1 e o valor absoluto de max como long */
     static public long novoInteiro_nl(long max){
         JSONObject json = new JSONObject();
-        json.put("operacao", "novoInteiroMinMax");
+        json.put("operacao", "novoInteiroNL");
         json.put("parametro1", max);
 
         JSONObject resultado = cliente.conversarComServidor(json);
