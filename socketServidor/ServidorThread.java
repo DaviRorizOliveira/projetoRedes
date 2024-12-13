@@ -131,7 +131,7 @@ class ServidorThread extends Thread {
 
         switch (comando) {
             case "novoInteiroStr":
-                return this.novoInteiroStrJSON(10);
+                return this.novoInteiroStrJSON(requisicao);
             case "novoInteiroMax":
                 return this.novoInteiroMax(requisicao);
             case "novoInteiroMinMax":
@@ -139,7 +139,7 @@ class ServidorThread extends Thread {
             case "novoInteiroMinMaxProb":
                 return this.criarResposta(comando, 12);
             case "novoInteiroNL":
-                return this.novoInteiroNlJSON(10);
+                return this.novoInteiroNlJSON(requisicao);
             case "exit":
                 return this.criarResposta(comando, 12);
             default:
@@ -218,7 +218,9 @@ class ServidorThread extends Thread {
     }
 
     /** Retorna um número entre 0 e o valor absoluto de max como String */
-    public JSONObject novoInteiroStrJSON(long max) {
+    public JSONObject novoInteiroStrJSON(JSONObject requisicao) {
+        long max = requisicao.getLong("parametro1");
+        
         long result = novoInteiro(max);
         if (result < 0)
             return this.geraErro("Valor Inválido", String.valueOf(max));
@@ -235,7 +237,9 @@ class ServidorThread extends Thread {
     }
 
     /** Retorna um número entre 0 e o valor absoluto de max como String */
-    public JSONObject novoInteiroNlJSON(long max) {
+    public JSONObject novoInteiroNlJSON(JSONObject requisicao) {
+        long max = requisicao.getLong("parametro1");
+
         long result = novoInteiro_nl(max);
         if (result < 0)
             return this.geraErro("Valor Inválido", String.valueOf(max));
