@@ -4,7 +4,10 @@ import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
+import org.json.JSONObject;
+
 import contas.Conta;
+import socketCliente.Cliente;
 
 public abstract class AuxLib {
     static public Scanner input  = new Scanner(System.in);
@@ -16,6 +19,8 @@ public abstract class AuxLib {
     private static final String UNDERLINE = "\u001B[4m";
 
     static private Random gerador = new Random();
+    //Coloquei isso aqui mas não sei onde que será feita essa conexão
+    static private Cliente cliente = new Cliente("localhost", 12345);
 
     /** Retorna um número entre 0 e o valor absoluto de max como String */
     static public String novoInteiroStr(long max){
@@ -24,12 +29,30 @@ public abstract class AuxLib {
 
     /** Retorna um número entre 0 e o valor absoluto de max como long */
     static public long novoInteiro(long max){
-        return novoInteiro(0, max);
+        JSONObject requisicao = new JSONObject();
+        
+        //cria a requisição
+        requisicao.put("operacao", "novoInteiroMax");
+        requisicao.put("parametro1", max);
+
+        //comunica com o servidor para fazer as operações
+        JSONObject resultado = cliente.conversarComServidor(requisicao);
+        long resposta = resultado.getLong("resultado");
+        
+        //devolve o resultado para o jogo
+        return resposta;
     }
 
     /** Retorna um número entre min e o valor absoluto de max como long */
     static public long novoInteiro(long min, long max){
-        return (long)(gerador.nextDouble() * max-min)+min;
+        JSONObject json = new JSONObject();
+        json.put("operacao", "novoInteiroMinMax");
+        json.put("parametro1", min);
+        json.put("parametro2", max);
+
+        long resultado = 0;
+        //long resultado = chamadaDoServidor(json);
+        return resultado;
     }
 
     /** Retorna um número entre 0 e um limite, personalizado com probabilidade 
@@ -209,5 +232,4 @@ public abstract class AuxLib {
 
         return textoFormatado.toString();
     }
-
 }
