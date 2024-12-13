@@ -1,10 +1,10 @@
 package add;
 
+import contas.Conta;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
-
-import contas.Conta;
+import org.json.JSONObject;
 
 public abstract class AuxLib {
     static public Scanner input  = new Scanner(System.in);
@@ -25,6 +25,18 @@ public abstract class AuxLib {
     /** Retorna um número entre 0 e o valor absoluto de max como long */
     static public long novoInteiro(long max){
         return novoInteiro(0, max);
+    }
+
+    
+
+    /** Retorna um número entre 0 e o valor absoluto de max como String */
+    static public void novoInteiroStrJSON(long max){
+        long result = novoInteiro(max);
+        JSONObject json = new JSONObject();
+        json.put("operacao", "novoInteiroStr");
+        json.put("parametro", result);
+        
+        PushToServer(json);
     }
 
     /** Retorna um número entre min e o valor absoluto de max como long */
@@ -53,6 +65,16 @@ public abstract class AuxLib {
     /** Retorna um número não nulo, entre 1 e o valor absoluto de max como long */
     static public long novoInteiro_nl(long max){
         return novoInteiro(1, max);
+    }
+
+    /** Retorna um número entre 0 e o valor absoluto de max como String */
+    static public void novoInteiroNlJSON(long max){
+        long result = novoInteiro_nl(max);
+        JSONObject json = new JSONObject();
+        json.put("operacao", "novoInteiroNl");
+        json.put("parametro", result);
+
+        PushToServer(json);
     }
     
     /** Verifica se a string informada é composta apenas por número e retorna um booleano */
