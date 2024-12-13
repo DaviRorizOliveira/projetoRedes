@@ -202,6 +202,8 @@ public class ServidorThread extends Thread {
     /** Retorna um número entre 0 e o valor absoluto de max como String */
     public JSONObject novoInteiroStrJSON(long max){
         long result = novoInteiro(max);
+        if (result < 0)
+            return this.geraErro("Valor Inválido", String.valueOf(max));
         JSONObject json = new JSONObject();
         json.put("status", "sucesso");
         json.put("operacao", "novoInteiroStr");
@@ -217,6 +219,8 @@ public class ServidorThread extends Thread {
     /** Retorna um número entre 0 e o valor absoluto de max como String */
     public JSONObject novoInteiroNlJSON(long max){
         long result = novoInteiro_nl(max);
+        if (result < 0)
+            return this.geraErro("Valor Inválido", String.valueOf(max));
         JSONObject json = new JSONObject();
         json.put("status", "sucesso");
         json.put("operacao", "novoInteiroNl");
