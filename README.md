@@ -1,7 +1,7 @@
 # MEMBROS DA EQUIPE
-Davi Roriz Oliveira
-Estêvão Sousa Vieira
-Joabe Ferreira da Silva Filho
+Davi Roriz Oliveira<br/>
+Estêvão Sousa Vieira<br/>
+Joabe Ferreira da Silva Filho<br/>
 Larissa de Brito Santos
 
 # DOCUMENTAÇÃO DO PROJETO
