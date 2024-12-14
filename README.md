@@ -1,3 +1,9 @@
+# MEMBROS DA EQUIPE
+Davi Roriz Oliveira
+Estêvão Sousa Vieira
+Joabe Ferreira da Silva Filho
+Larissa de Brito Santos
+
 # DOCUMENTAÇÃO DO PROJETO
 
 1 - Quando o cliente se conecta
